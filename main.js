@@ -54,18 +54,136 @@ window.addEventListener('beforeunload',(e)=>{
  return confirmMessage
 })
 
+//         let alarms = [];
+
+//         function addAlarm() {
+//             const alarmTimeInput = document.getElementById('alarmTime');
+//             const alarmTime = alarmTimeInput.value;
+
+//             if (!alarmTime) {
+//                 alert('Please set the alarm time.');
+//                 return;
+//             }
+
+//             const alarmNoteInput = document.getElementById('alarmNote');
+//             const alarmNote = alarmNoteInput.value;
+
+//             alarms.push({ time: alarmTime, note: alarmNote });
+
+//             displayAlarms();
+//             alarmTimeInput.value = '';
+//             alarmNoteInput.value = '';
+//         }
+
+//         function displayAlarms() {
+//             const alarmsList = document.getElementById('alarmsList');
+//             alarmsList.innerHTML = '';
+
+//             alarms.forEach((alarm, index) => {
+//                 const listItem = document.createElement('li');
+//                 listItem.textContent = `Alarm ${index + 1}: ${alarm.time} - ${alarm.note}`;
+//                 alarmsList.appendChild(listItem);
+//             });
+//         }
+
+//         function setAlarms() {
+//             alarms.forEach(alarm => {
+//                 const now = new Date();
+//                 const alarmDate = new Date(now.toDateString() + ' ' + alarm.time);
+//                 const currentTime = now.getTime();
+//                 const alarmTimeMilliseconds = alarmDate.getTime();
+
+//                 if (currentTime > alarmTimeMilliseconds) {
+//                     alert('Please set an alarm time in the future.');
+//                     return;
+//                 }
+
+//                 const timeUntilAlarm = alarmTimeMilliseconds - currentTime;
+
+//                 setTimeout(function() {
+//                     // const alarmSound = document.getElementById('alarmSound');
+//                     // alarmSound.play();
+
+//                     // alert(`Alarm: ${alarm.time}\nNote: ${alarm.note}`);
+
+//                  alert(" your alarm ")
 
 
-const currentTime= document.querySelector("digitalClock");
-content= document.querySelector(".content")
-selectMenu=document.querySelectorAll("select")
-setAlarmBtn=document.querySelector('button')
+//                 }, timeUntilAlarm);
+//             });
+//         }
 
-let alarmTime,isAlarmSet
-ringtone  = new Audio(files/ringtone.mp3)
-for (let i = 12; i>0; i--) {
-    i=i<10?`0${i}`: i
-    let option = `<option value="${i}>${i}</option>`
-    selectMenu[0].firstElementChild.insertAdjacentHTML('afterend',option);
-    
-}
+
+   
+          
+
+//    setAlarms()
+        
+
+
+
+        let alarms = [];
+
+        function addAlarm() {
+            const alarmTimeInput = document.getElementById('alarmTime');
+            const alarmTime = alarmTimeInput.value;
+
+            if (!alarmTime) {
+                alert('Please set the alarm time.');
+                return;
+            }
+
+            const alarmNoteInput = document.getElementById('alarmNote');
+            const alarmNote = alarmNoteInput.value;
+
+            alarms.push({ time: alarmTime, note: alarmNote });
+
+            displayAlarms();
+            alarmTimeInput.value = '';
+            alarmNoteInput.value = '';
+
+            // Call setAlarms to set the newly added alarm
+            setAlarms();
+        }
+
+        function displayAlarms() {
+            const alarmsList = document.getElementById('alarmsList');
+            alarmsList.innerHTML = '';
+
+            alarms.forEach((alarm, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `Alarm ${index + 1}: ${alarm.time} - ${alarm.note}`;
+                alarmsList.appendChild(listItem);
+            });
+        }
+
+        function playSoundAndShowAlert(alarm) {
+            return new Promise(resolve => {
+              const alarmSound = document.getElementById('alarmSound');
+              alarmSound.play();
+          
+              // Wait for a short period to ensure the sound starts playing
+              setTimeout(() => {
+                alert(`Alarm: ${alarm.time}\nNote: ${alarm.note}`);
+                resolve();
+              }, 100);
+            });
+          }
+          async function setAlarms() {
+            for (const alarm of alarms) {
+              const now = new Date();
+              const alarmDate = new Date(now.toDateString() + ' ' + alarm.time);
+              const currentTime = now.getTime();
+              const alarmTimeMilliseconds = alarmDate.getTime();
+          
+              if (currentTime > alarmTimeMilliseconds) {
+                alert('Please set an alarm time in the future.');
+                return;
+              }
+          
+              const timeUntilAlarm = alarmTimeMilliseconds - currentTime;
+              await new Promise(resolve => setTimeout(resolve, timeUntilAlarm));
+          
+              await playSoundAndShowAlert(alarm);
+            }
+          }
